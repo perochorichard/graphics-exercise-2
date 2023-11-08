@@ -39,6 +39,9 @@
     <ClCompile Include="ToolWindow.cpp">
       <Filter>Forms</Filter>
     </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Singleton.h">
@@ -61,6 +64,9 @@
     </ClInclude>
     <ClInclude Include="ToolWindow.h">
       <Filter>Forms</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
