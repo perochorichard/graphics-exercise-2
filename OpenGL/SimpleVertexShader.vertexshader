@@ -1,7 +1,16 @@
-#version 120 // OpenGL version 2.1 (minimum requirement)
+#version 330
 
 in vec3 vertices; // value sent from application to this attribute
+in vec3 colors;
+in vec3 texCoords;
+
+uniform mat4 WVP;
+
+out vec3 retColor;
+out vec2 retTexCoord;
 
 void main() {
 	gl_Position = vec4(vertices, 1.0); // Pass-through shader, pass positions to next shader
+	retColor = colors;
+	retTexCoord = texCoords;
 }
