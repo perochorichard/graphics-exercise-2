@@ -13,6 +13,7 @@ public:
 	GLFWwindow* GetWindow() { if (m_window == nullptr) { NewWindow(); } return m_window; }
 
 	void NewWindow();
+	Resolution GetResolution();
 
 private:
 	GLFWwindow* m_window;

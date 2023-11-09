@@ -8,8 +8,9 @@
 #include <GL/glew.h> // Include GLEW
 #include <GLFW/glfw3.h> // Inlcude GLFW
 #include <glm/glm.hpp> // Include GLM
-#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/matrix_transform.hpp> // View / projection
 
+#include "Resolution.h"
 #include "Singleton.h"
 
 // Windows specific
