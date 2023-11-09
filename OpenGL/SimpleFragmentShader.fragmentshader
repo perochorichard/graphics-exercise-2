@@ -1,9 +1,12 @@
-#version 120 // OpenGL version 2.1 (minimum requirement)
+#version 330
 
-uniform int RenderRedChannel;
-uniform int RenderGreenChannel;
-uniform int RenderBlueChannel;
+in vec3 retColor;
+in vec2 retTexCoord;
+
+out vec4 FragColor;
+
+uniform sampler2D sampler1;
 
 void main() {
-	gl_FragColor = vec4(RenderRedChannel, RenderGreenChannel, RenderBlueChannel, 0.0); // output color based on RGB values
+	FragColor = texture(sampler1, retTexCoord);
 }
