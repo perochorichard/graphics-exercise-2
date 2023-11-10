@@ -25,6 +25,7 @@ void Texture::LoadTexture(string _fileName) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     // Load and generate the texture
+    stbi_set_flip_vertically_on_load(true); // images have 0.0 on the top, and opengl expects it on the bottom, causing upside-down image. flip image to resolve.
     GLubyte* data = stbi_load(_fileName.c_str(), &m_width, &m_height, &m_channels, 0);
 
     if (data != nullptr) {

@@ -89,11 +89,11 @@ void Mesh::Render(glm::mat4 _wvp) {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer); // bind the index buffer
 	
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, m_texture.GetTexture()); // bind the texture
+	glBindTexture(GL_TEXTURE_2D, m_texture.GetTexture()); // bind wood texture explicitly to texture unit 1
 	glUniform1i(m_shader->GetSampler1(), 0);
 
 	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, m_texture2.GetTexture()); // bind the texture
+	glBindTexture(GL_TEXTURE_2D, m_texture2.GetTexture()); // bind emoji texture explicitly to texture unit 2
 	glUniform1i(m_shader->GetSampler2(), 1);
 	
 	glDrawElements(GL_TRIANGLES, m_indexData.size(), GL_UNSIGNED_BYTE, (void*)0);
