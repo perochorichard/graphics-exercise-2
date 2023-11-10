@@ -18,7 +18,7 @@ void WindowController::NewWindow() {
 	glfwWindowHint(GLFW_SAMPLES, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // 3 in 3.1
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1); // 1 in 3.1
-	M_ASSERT((m_window = glfwCreateWindow(1024, 768, "A sample scene", NULL, NULL)) != nullptr, "Failed to open GLFW window.");
+	M_ASSERT((m_window = glfwCreateWindow(1024, 576, "A sample scene", NULL, NULL)) != nullptr, "Failed to open GLFW window.");
 	glfwMakeContextCurrent(m_window);
 }
 
