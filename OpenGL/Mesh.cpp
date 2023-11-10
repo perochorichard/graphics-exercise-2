@@ -4,6 +4,7 @@
 Mesh::Mesh() {
 	m_shader = nullptr;
 	m_texture = { };
+	m_texture2 = { };
 	m_vertexBuffer = 0;
 	m_indexBuffer = 0;
 	m_position = { 0, 0, 0 };
@@ -18,6 +19,7 @@ void Mesh::Cleanup() {
 	glDeleteBuffers(1, &m_vertexBuffer);
 	glDeleteBuffers(1, &m_indexBuffer);
 	m_texture.Cleanup();
+	m_texture2.Cleanup();
 }
 
 void Mesh::Create(Shader* _shader) {
@@ -25,7 +27,8 @@ void Mesh::Create(Shader* _shader) {
 	
 	m_texture = Texture();
 	m_texture.LoadTexture("../Assets/Textures/Wood.jpg");
-
+	m_texture2 = Texture();
+	m_texture2.LoadTexture("../Assets/Textures/Emoji.jpg");
 	m_vertexData = {
 		/*   position   */     /* RGBA color */     /* texture coords */
 		50.0f, 50.0f, 0.0f,    1.0f, 0.0f, 0.0f,    1.0f, 1.0f, // top-right
@@ -84,9 +87,15 @@ void Mesh::Render(glm::mat4 _wvp) {
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer); // bind the vertex buffer
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer); // bind the index buffer
+	
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_texture.GetTexture()); // bind the texture
 	glUniform1i(m_shader->GetSampler1(), 0);
+
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, m_texture2.GetTexture()); // bind the texture
+	glUniform1i(m_shader->GetSampler2(), 1);
+	
 	glDrawElements(GL_TRIANGLES, m_indexData.size(), GL_UNSIGNED_BYTE, (void*)0);
 	glDisableVertexAttribArray(m_shader->GetAttrColors());
 	glDisableVertexAttribArray(m_shader->GetAttrVertices());

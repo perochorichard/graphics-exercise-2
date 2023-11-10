@@ -7,6 +7,7 @@ Shader::Shader() {
 	m_attrTexCoords = 0;
 	m_attrWVP = 0;
 	m_sampler1 = 0;
+	m_sampler2 = 0;
 	m_result = GL_FALSE;
 	m_infoLogLength = 0;
 }
@@ -22,6 +23,7 @@ void Shader::LoadAttributes() {
 	m_attrTexCoords = glGetAttribLocation(m_programID, "texCoords"); // handle for texCoords buffer
 	m_attrWVP = glGetUniformLocation(m_programID, "WVP"); // handle for WVP matrix
 	m_sampler1 = glGetUniformLocation(m_programID, "sampler1"); // handle for texture sampler 1
+	m_sampler2 = glGetUniformLocation(m_programID, "sampler2"); // handle for texture sampler 2
 }
 
 void Shader::EvaluateShader(int _infoLength, GLuint _id) {
