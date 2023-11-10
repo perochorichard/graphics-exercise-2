@@ -84,7 +84,9 @@ void Mesh::Render(glm::mat4 _wvp) {
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer); // bind the vertex buffer
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer); // bind the index buffer
+	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_texture.GetTexture()); // bind the texture
+	glUniform1i(m_shader->GetSampler1(), 0);
 	glDrawElements(GL_TRIANGLES, m_indexData.size(), GL_UNSIGNED_BYTE, (void*)0);
 	glDisableVertexAttribArray(m_shader->GetAttrColors());
 	glDisableVertexAttribArray(m_shader->GetAttrVertices());
