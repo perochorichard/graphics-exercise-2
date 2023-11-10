@@ -8,5 +8,5 @@ out vec4 FragColor;
 uniform sampler2D sampler1;
 
 void main() {
-	FragColor = texture(sampler1, retTexCoord);
+	FragColor = texture(sampler1, retTexCoord); // Example 1: Texture only
 }

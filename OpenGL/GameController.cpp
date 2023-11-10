@@ -4,6 +4,7 @@
 
 GameController::GameController() {
 	m_shader = { };
+	m_camera = { };
 	m_mesh = { };
 }
 
@@ -11,12 +12,15 @@ void GameController::Initialize() {
 	GLFWwindow* window = WindowController::GetInstance().GetWindow(); // Call this first as it creates the window required by GLFW
 	M_ASSERT(glewInit() == GLEW_OK, "Failed to Initialize GLEW."); // initialize GLEW
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE); // Ensure we can capture the escape key
-	glClearColor(0.0f, 0.0f, 0.4f, 0.0f); // Dark blue background
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // black background
+
+	// create default perspective camera
+	m_camera = Camera(WindowController::GetInstance().GetResolution());
 }
 
 void GameController::RunGame() {
-	PrimitiveDrawTest::ToolWindow^ window = gcnew PrimitiveDrawTest::ToolWindow();
-	window->Show();
+	//PrimitiveDrawTest::ToolWindow^ window = gcnew PrimitiveDrawTest::ToolWindow();
+	//window->Show();
 
 	m_shader = Shader();
 	m_shader.LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
@@ -26,18 +30,11 @@ void GameController::RunGame() {
 
 	GLFWwindow* win = WindowController::GetInstance().GetWindow();
 	do {
-		System::Windows::Forms::Application::DoEvents(); // handle C++/CLI form events
+		//System::Windows::Forms::Application::DoEvents(); // handle C++/CLI form events
 
-		GLint loc = glGetUniformLocation(m_shader.GetProgramID(), "RenderRedChannel");
-		glUniform1i(loc, (int)PrimitiveDrawTest::ToolWindow::RenderRedChannel);
-		loc = glGetUniformLocation(m_shader.GetProgramID(), "RenderGreenChannel");
-		glUniform1i(loc, (int)PrimitiveDrawTest::ToolWindow::RenderGreenChannel);
-		loc = glGetUniformLocation(m_shader.GetProgramID(), "RenderBlueChannel");
-		glUniform1i(loc, (int)PrimitiveDrawTest::ToolWindow::RenderBlueChannel);
-
-		glClear(GL_COLOR_BUFFER_BIT); // Clear the screen
-		m_mesh.Render();
-		glfwSwapBuffers(win); // Swap the front and back buffers
+		glClear(GL_COLOR_BUFFER_BIT); // clear the screen
+		m_mesh.Render(m_camera.GetProjection() * m_camera.GetView());
+		glfwSwapBuffers(win); // swap back and front buffers
 		glfwPollEvents();
 	} while (glfwGetKey(win, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(win) == 0);
 

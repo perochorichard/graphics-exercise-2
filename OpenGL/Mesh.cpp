@@ -14,6 +14,12 @@ Mesh::~Mesh() {
 
 }
 
+void Mesh::Cleanup() {
+	glDeleteBuffers(1, &m_vertexBuffer);
+	glDeleteBuffers(1, &m_indexBuffer);
+	m_texture.Cleanup();
+}
+
 void Mesh::Create(Shader* _shader) {
 	m_shader = _shader;
 	
@@ -28,12 +34,8 @@ void Mesh::Create(Shader* _shader) {
 		-50.0f, 50.0f, 0.0f,   1.0f, 1.0f, 1.0f,    0.0f, 1.0f  //top-left
 	};
 	
-	// creates a new buffer object and assigns unique ID to m_vertexBuffer for reference.
 	glGenBuffers(1, &m_vertexBuffer); 
-	// binds buffer object (using id) to the GL_ARRAY_BUFFER target.
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
-	// Allocate memory and copy the vertex data into the GL_ARRAY_BUFFER target.
-	// The data will be used for rendering and will not change frequently (GL_STATIC_DRAW).
 	glBufferData(GL_ARRAY_BUFFER, m_vertexData.size() * sizeof(float), m_vertexData.data(), GL_STATIC_DRAW);
 
 	m_indexData = {
@@ -43,12 +45,6 @@ void Mesh::Create(Shader* _shader) {
 	glGenBuffers(1, &m_indexBuffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indexData.size() * sizeof(GLubyte), m_indexData.data(), GL_STATIC_DRAW);
-}
-
-void Mesh::Cleanup() {
-	glDeleteBuffers(1, &m_vertexBuffer);
-	glDeleteBuffers(1, &m_indexBuffer);
-	m_texture.Cleanup();
 }
 
 void Mesh::Render(glm::mat4 _wvp) {
@@ -63,14 +59,23 @@ void Mesh::Render(glm::mat4 _wvp) {
 		8 * sizeof(float), // stride (8 floats per vertex definition)
 		(void*)0);         // array buffer offset
 
-	// end attribute buffer : colors
+	// 2nd attribute buffer : colors
 	glEnableVertexAttribArray(m_shader->GetAttrColors());
 	glVertexAttribPointer(m_shader->GetAttrColors(),
-		3,                 //size (3 vertices per primitive)
+		3,                 // size (3 vertices per primitive)
 		GL_FLOAT,          // type
 		GL_FALSE,          // normalized
 		8 * sizeof(float), // stride
 		(void*)(3 * sizeof(float))); // array buffer offset
+
+	// 3rd attribute buffer : texCoords
+	glEnableVertexAttribArray(m_shader->GetAttrTexCoords());
+	glVertexAttribPointer(m_shader->GetAttrTexCoords(),
+		2,                 // size
+		GL_FLOAT,          // type
+		GL_FALSE,          // normalized
+		8 * sizeof(float), // stride (8 floats per vertex definition)
+		(void*)(6 * sizeof(float))); // array buffer offset
 
 	// 4th attribute : WVP
 	m_rotation.y += 0.005f;

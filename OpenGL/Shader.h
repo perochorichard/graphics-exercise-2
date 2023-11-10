@@ -24,6 +24,7 @@ private:
 	GLuint LoadShaderFile(const char* _filePath, GLenum _type);
 	void LoadAttributes();
 	void EvaluateShader(int _infoLength, GLuint _id);
+	bool CheckShaderCompilationStatus(GLuint shaderID);
 
 	GLuint m_programID;
 	GLuint m_attrVertices;

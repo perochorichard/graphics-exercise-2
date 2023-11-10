@@ -62,8 +62,18 @@ GLuint Shader::LoadShaderFile(const char* _filePath, GLenum _type) {
 
 void Shader::CreateShaderProgram(const char* _vertexFilePath, const char* _fragmentFilePath) {
 	m_programID = glCreateProgram(); // Create the shader program
-	GLuint vertexShaderID = LoadShaderFile(_vertexFilePath, GL_VERTEX_SHADER); // Load vertex shader
-	GLuint fragmentShaderID = LoadShaderFile(_fragmentFilePath, GL_FRAGMENT_SHADER); // Load fragment shader
+	GLuint vertexShaderID = LoadShaderFile("SimpleVertexShader.vertexshader", GL_VERTEX_SHADER);
+	GLuint fragmentShaderID = LoadShaderFile("SimpleFragmentShader.fragmentshader", GL_FRAGMENT_SHADER);
+
+	if (CheckShaderCompilationStatus(vertexShaderID)) {
+		std::cout << "Vertex shader compiled successfully..." << std::endl;
+	}
+
+	if (CheckShaderCompilationStatus(fragmentShaderID)) {
+		std::cout << "Fragment shader compiled successfully..." << std::endl;
+	}
+
+
 	glLinkProgram(m_programID); // Link the program
 
 	// check program
@@ -81,4 +91,22 @@ void Shader::CreateShaderProgram(const char* _vertexFilePath, const char* _fragm
 void Shader::LoadShaders(const char* _vertexFilePath, const char* _fragmentFilePath) {
 	CreateShaderProgram(_vertexFilePath, _fragmentFilePath);
 	LoadAttributes();
+}
+
+bool Shader::CheckShaderCompilationStatus(GLuint shaderID) {
+	GLint result = GL_FALSE;
+	int infoLogLength;
+
+	// Check shader compilation status
+	glGetShaderiv(shaderID, GL_COMPILE_STATUS, &result);
+	glGetShaderiv(shaderID, GL_INFO_LOG_LENGTH, &infoLogLength);
+
+	if (infoLogLength > 1) {
+		std::vector<char> errorMessage(infoLogLength + 1);
+		glGetShaderInfoLog(shaderID, infoLogLength, NULL, &errorMessage[0]);
+		M_ASSERT(0, ("Shader compilation error:\n%s\n", &errorMessage[0]));
+		return false;
+	}
+
+	return true;
 }

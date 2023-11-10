@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <iostream>
 
 #include <GL/glew.h> // Include GLEW
 #include <GLFW/glfw3.h> // Inlcude GLFW
