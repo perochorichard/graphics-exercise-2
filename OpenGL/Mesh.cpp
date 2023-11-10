@@ -49,7 +49,7 @@ void Mesh::Create(Shader* _shader) {
 	};
 	for (int i = 0; i < rgb.length(); i++) {
 		// 2. convert rgb to yuv
-		rgb[i] = ColorUtils::RGBtoYUV(rgb[i]);
+		//rgb[i] = ColorUtils::RGBtoYUV(rgb[i]);
 		// 3. apply scaling to yuv 
 		// 4. convert back to rgb
 	}

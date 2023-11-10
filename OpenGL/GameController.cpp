@@ -19,8 +19,8 @@ void GameController::Initialize() {
 }
 
 void GameController::RunGame() {
-	//PrimitiveDrawTest::ToolWindow^ window = gcnew PrimitiveDrawTest::ToolWindow();
-	//window->Show();
+	PrimitiveDrawTest::ToolWindow^ window = gcnew PrimitiveDrawTest::ToolWindow();
+	window->Show();
 
 	m_shader = Shader();
 	m_shader.LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
