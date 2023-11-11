@@ -30,7 +30,21 @@ void GameController::RunGame() {
 
 	GLFWwindow* win = WindowController::GetInstance().GetWindow();
 	do {
-		//System::Windows::Forms::Application::DoEvents(); // handle C++/CLI form events
+		System::Windows::Forms::Application::DoEvents(); // handle C++/CLI form events
+
+		// GLint loc = glGetUniformLocation(m_shader.GetProgramID(), "RenderRedChannel");
+		// glUniform1i(loc, (int)PrimitiveDrawTest::ToolWindow::RenderRedChannel);
+		GLint loc = glGetUniformLocation(m_shader.GetProgramID(), "yScale");
+		glUniform1i(loc, (int)PrimitiveDrawTest::ToolWindow::TrackBarYValue);
+		loc = glGetUniformLocation(m_shader.GetProgramID(), "uScale");
+		glUniform1i(loc, (int)PrimitiveDrawTest::ToolWindow::TrackBarUValue);
+		loc = glGetUniformLocation(m_shader.GetProgramID(), "vScale");
+		glUniform1i(loc, (int)PrimitiveDrawTest::ToolWindow::TrackBarVValue);
+		loc = glGetUniformLocation(m_shader.GetProgramID(), "invertColors");
+		glUniform1i(loc, PrimitiveDrawTest::ToolWindow::InvertColors);
+		// PrimitiveDrawTest::ToolWindow::TrackBarYValue // retrieve Y scaling value from tool window
+		// PrimitiveDrawTest::ToolWindow::TrackBarUValue 
+		// PrimitiveDrawTest::ToolWindow::TrackBarVValue 
 
 		glClear(GL_COLOR_BUFFER_BIT); // clear the screen
 		m_mesh.Render(m_camera.GetProjection() * m_camera.GetView());

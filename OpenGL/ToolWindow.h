@@ -16,12 +16,18 @@ namespace PrimitiveDrawTest {
 	{
 	public:
 		static bool InvertColors;
+		static int TrackBarYValue;
+		static int TrackBarUValue;
+		static int TrackBarVValue;
 
 		ToolWindow(void)
 		{
 			InitializeComponent();
 
 			InvertColors = checkBoxInvertColors->Checked;
+			TrackBarYValue = 100;
+			TrackBarUValue = 100;
+			TrackBarVValue = 100;
 		}
 	private: 
 		System::Windows::Forms::TrackBar^ trackBarY;
@@ -83,7 +89,9 @@ namespace PrimitiveDrawTest {
 			this->checkBoxInvertColors->Size = System::Drawing::Size(85, 17);
 			this->checkBoxInvertColors->TabIndex = 0;
 			this->checkBoxInvertColors->Text = L"Invert Colors";
-			this->checkBoxInvertColors->UseVisualStyleBackColor = true;			// 
+			this->checkBoxInvertColors->UseVisualStyleBackColor = true;
+			this->checkBoxInvertColors->CheckedChanged += gcnew System::EventHandler(this, &ToolWindow::checkBoxInvertColors_CheckedChanged_1);
+			// 
 			// trackBarY
 			// 
 			this->trackBarY->Location = System::Drawing::Point(24, 23);
@@ -195,18 +203,20 @@ namespace PrimitiveDrawTest {
 
 		}
 #pragma endregion
-	
-	private: System::Void checkBoxInvertColors_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
-		InvertColors = checkBoxInvertColors->Checked;
-	}
 	private: System::Void trackBarY_Scroll(System::Object^ sender, System::EventArgs^ e) {
 		labelYPercent->Text = String::Format("{0}%", trackBarY->Value);
+		TrackBarYValue = trackBarY->Value;
 	}
 	private: System::Void trackBarU_Scroll(System::Object^ sender, System::EventArgs^ e) {
 		labelUPercent->Text = String::Format("{0}%", trackBarU->Value);
+		TrackBarUValue = trackBarU->Value;
 	}
 	private: System::Void trackBarV_Scroll(System::Object^ sender, System::EventArgs^ e) {
 		labelVPercent->Text = String::Format("{0}%", trackBarV->Value);
+		TrackBarVValue = trackBarV->Value;
+	}
+	private: System::Void checkBoxInvertColors_CheckedChanged_1(System::Object^ sender, System::EventArgs^ e) {
+		InvertColors = checkBoxInvertColors->Checked;
 	}
 };
 }

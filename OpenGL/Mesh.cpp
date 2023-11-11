@@ -31,6 +31,7 @@ void Mesh::Create(Shader* _shader) {
 	m_texture2 = Texture();
 	m_texture2.LoadTexture("../Assets/Textures/Emoji.jpg");
 
+	// TODO: perform conversion in shader
 	/*
 	1. get user inputted slider values for yuv scaling
 	2. convert rgb to yuv 
@@ -55,7 +56,7 @@ void Mesh::Create(Shader* _shader) {
 	}
 	// 5. apply to vertex data
 	m_vertexData = {
-		/*   position   */     /*                     RGBA color                         */   /* texture coords */
+		/*   position   */     /*          RGBA color        */     /* texture coords */
 		50.0f, 50.0f, 0.0f,    rgb[0][0], rgb[0][1], rgb[0][2],    1.0f, 1.0f, // top-right
 		50.0f, -50.0f, 0.0f,   rgb[1][0], rgb[1][1], rgb[1][2],    1.0f, 0.0f, // bottom-right
 		-50.0f, -50.0f, 0.0f,  rgb[2][0], rgb[2][1], rgb[2][2],    0.0f, 0.0f, // bottom-left
