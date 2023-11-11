@@ -31,36 +31,13 @@ void Mesh::Create(Shader* _shader) {
 	m_texture2 = Texture();
 	m_texture2.LoadTexture("../Assets/Textures/Emoji.jpg");
 
-	// TODO: perform conversion in shader
-	/*
-	1. get user inputted slider values for yuv scaling
-	2. convert rgb to yuv 
-	3. apply scaling to yuv 
-	4. convert back to rgb
-	5. apply to vertex data
-	*/
 
-	// 1. get user inputted slider values for yuv scaling
-
-	glm::mat4x3 rgb = {
-		{1.0f, 0.0f, 0.0f},
-		{0.0f, 1.0f, 0.0f},
-		{0.0f, 0.0f, 1.0f},
-		{1.0f, 1.0f, 1.0f}
-	};
-	for (int i = 0; i < rgb.length(); i++) {
-		// 2. convert rgb to yuv
-		//rgb[i] = ColorUtils::RGBtoYUV(rgb[i]);
-		// 3. apply scaling to yuv 
-		// 4. convert back to rgb
-	}
-	// 5. apply to vertex data
 	m_vertexData = {
-		/*   position   */     /*          RGBA color        */     /* texture coords */
-		50.0f, 50.0f, 0.0f,    rgb[0][0], rgb[0][1], rgb[0][2],    1.0f, 1.0f, // top-right
-		50.0f, -50.0f, 0.0f,   rgb[1][0], rgb[1][1], rgb[1][2],    1.0f, 0.0f, // bottom-right
-		-50.0f, -50.0f, 0.0f,  rgb[2][0], rgb[2][1], rgb[2][2],    0.0f, 0.0f, // bottom-left
-		-50.0f, 50.0f, 0.0f,   rgb[3][0], rgb[3][1], rgb[3][2],    0.0f, 1.0f  //top-left
+		/*   position   */     /* RGBA color */     /* texture coords */
+		50.0f, 50.0f, 0.0f,    1.0f, 0.0f, 0.0f,    1.0f, 1.0f, // top-right
+		50.0f, -50.0f, 0.0f,   0.0f, 1.0f, 0.0f,    1.0f, 0.0f, // bottom-right
+		-50.0f, -50.0f, 0.0f,  0.0f, 0.0f, 1.0f,    0.0f, 0.0f, // bottom-left
+		-50.0f, 50.0f, 0.0f,   1.0f, 1.0f, 1.0f,    0.0f, 1.0f  //top-left
 	};
 	
 	glGenBuffers(1, &m_vertexBuffer); 

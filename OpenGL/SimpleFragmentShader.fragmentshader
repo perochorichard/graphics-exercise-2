@@ -18,7 +18,7 @@ vec3 rgbToYuv(vec3 rgb) {
 		{-0.14713, -0.28886,  0.436},
 		{ 0.615,   -0.51499, -0.10001}
 	};
-    return rgb * rgbToYuvMatrix;
+    return rgbToYuvMatrix * rgb;
 }
 
 vec3 yuvToRgb(vec3 yuv) {
@@ -27,7 +27,7 @@ vec3 yuvToRgb(vec3 yuv) {
 		{1, -0.39465, -0.58060},
 		{1,  2.03211,  0}
 	};
-    return yuv * yuvToRgbMatrix;
+    return yuvToRgbMatrix * yuv;
 }
 
 void main() {
