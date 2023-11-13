@@ -95,9 +95,9 @@ void Mesh::Render(glm::mat4 _wvp) {
 	// 2nd attribute buffer : normals
 	glEnableVertexAttribArray(m_shader->GetAttrNormals());
 	glVertexAttribPointer(m_shader->GetAttrNormals(),
-		3, // size
-		GL_FLOAT, // type
-		GL_FALSE, // normalized
+		3,                 // size
+		GL_FLOAT,          // type
+		GL_FALSE,          // normalized
 		8 * sizeof(float), //stride
 		(void*)(3 * sizeof(float)));
 
@@ -112,16 +112,15 @@ void Mesh::Render(glm::mat4 _wvp) {
 
 	// 4th attribute : WVP
 	m_rotation.y += 0.0f;
-	glm::mat4 transform = glm::rotate(_wvp, m_rotation.y, glm::vec3(0, 1, 0));
+	glm::mat4 translate = glm::translate(_wvp, m_position);
+	glm::mat4 transform = glm::rotate(translate, m_rotation.y, glm::vec3(0, 1, 0));
 	glUniformMatrix4fv(m_shader->GetAttrWVP(), 1, GL_FALSE, &transform[0][0]);
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer); // bind the vertex buffer
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer); // bind the index buffer
-	
+
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_texture.GetTexture()); // bind wood texture explicitly to texture unit 1
 	glUniform1i(m_shader->GetSampler1(), 0);
-
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, m_texture2.GetTexture()); // bind emoji texture explicitly to texture unit 2
 	glUniform1i(m_shader->GetSampler2(), 1);

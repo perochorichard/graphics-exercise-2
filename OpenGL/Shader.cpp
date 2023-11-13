@@ -4,6 +4,7 @@ Shader::Shader() {
 	m_programID = 0;
 	m_attrVertices = 0;
 	m_attrColors = 0;
+	m_attrNormals = 0;
 	m_attrTexCoords = 0;
 	m_attrWVP = 0;
 	m_sampler1 = 0;
@@ -72,8 +73,8 @@ GLuint Shader::LoadShaderFile(const char* _filePath, GLenum _type) {
 
 void Shader::CreateShaderProgram(const char* _vertexFilePath, const char* _fragmentFilePath) {
 	m_programID = glCreateProgram(); // Create the shader program
-	GLuint vertexShaderID = LoadShaderFile("SimpleVertexShader.vertexshader", GL_VERTEX_SHADER);
-	GLuint fragmentShaderID = LoadShaderFile("SimpleFragmentShader.fragmentshader", GL_FRAGMENT_SHADER);
+	GLuint vertexShaderID = LoadShaderFile(_vertexFilePath, GL_VERTEX_SHADER);
+	GLuint fragmentShaderID = LoadShaderFile(_fragmentFilePath, GL_FRAGMENT_SHADER);
 
 	if (CheckShaderCompilationStatus(vertexShaderID)) {
 		std::cout << "Vertex shader compiled successfully..." << std::endl;
