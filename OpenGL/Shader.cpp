@@ -17,9 +17,17 @@ void Shader::Cleanup() {
 	glDeleteProgram(m_programID);
 }
 
+void Shader::SetVec3(const char* _name, glm::vec3 _value) {
+	GLint loc = glGetUniformLocation(m_programID, _name);
+	if (loc != -1) {
+		glUniform3fv(loc, 1, &_value[0]);
+	}
+}
+
 void Shader::LoadAttributes() {
 	m_attrVertices = glGetAttribLocation(m_programID, "vertices"); // Get a handle for the vertex buffer
 	m_attrColors = glGetAttribLocation(m_programID, "colors"); // handle for colors buffer
+	m_attrNormals = glGetAttribLocation(m_programID, "normals"); // get handle for normals
 	m_attrTexCoords = glGetAttribLocation(m_programID, "texCoords"); // handle for texCoords buffer
 	m_attrWVP = glGetUniformLocation(m_programID, "WVP"); // handle for WVP matrix
 	m_sampler1 = glGetUniformLocation(m_programID, "sampler1"); // handle for texture sampler 1
