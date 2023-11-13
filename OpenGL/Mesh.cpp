@@ -82,6 +82,7 @@ void Mesh::Create(Shader* _shader) {
 
 void Mesh::Render(glm::mat4 _wvp) {
 	glUseProgram(m_shader->GetProgramID()); // Use our shader
+	m_shader->SetVec3("DiffuseColor", { 1.0f, 0.0f, 0.0f }); // set diffuse color to red
 
 	// 1st attribute buffer : vertices
 	glEnableVertexAttribArray(m_shader->GetAttrVertices()); // vertext position data will be used in the rendering process
