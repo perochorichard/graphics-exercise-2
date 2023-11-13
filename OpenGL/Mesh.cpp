@@ -9,6 +9,10 @@ Mesh::Mesh() {
 	m_indexBuffer = 0;
 	m_position = { 0, 0, 0 };
 	m_rotation = { 0, 0, 0 };
+	m_scale = { 1, 1, 1 };
+	m_world = glm::mat4();
+	m_lightPosition = { 0, 0, 0 };
+	m_lightColor = { 1, 1, 1 };
 }
 
 Mesh::~Mesh() {
@@ -17,7 +21,6 @@ Mesh::~Mesh() {
 
 void Mesh::Cleanup() {
 	glDeleteBuffers(1, &m_vertexBuffer);
-	glDeleteBuffers(1, &m_indexBuffer);
 	m_texture.Cleanup();
 	m_texture2.Cleanup();
 }
@@ -29,6 +32,8 @@ void Mesh::Create(Shader* _shader) {
 	m_texture.LoadTexture("../Assets/Textures/Wood.jpg");
 	m_texture2 = Texture();
 	m_texture2.LoadTexture("../Assets/Textures/Emoji.jpg");
+
+#pragma region VertexData
 	m_vertexData = {
 		/*    Position    */  /*   Normals     */ /* Texture Coords */
 		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f,
@@ -74,21 +79,32 @@ void Mesh::Create(Shader* _shader) {
 		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f
 
 	};
+#pragma endregion
 	
 	glGenBuffers(1, &m_vertexBuffer); 
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, m_vertexData.size() * sizeof(float), m_vertexData.data(), GL_STATIC_DRAW);
 }
 
-void Mesh::Render(glm::mat4 _wvp) {
+void Mesh::Render(glm::mat4 _pv) {
 	glUseProgram(m_shader->GetProgramID()); // Use our shader
-	m_shader->SetVec3("AmbientLight", { 0.1f, 0.1, 0.1f });
-	m_shader->SetVec3("DiffuseColor", { 1.0f, 1.0f, 1.0f }); // set diffuse color to red
-	m_shader->SetVec3("LightDirection", { 1.0f, 0.5f, 0.0f });
-	m_shader->SetVec3("LightColor", { 0.5f, 0.9f, 0.5f });
+
+	m_rotation.y += 0.0001f;
+
+	CalculateTransform();
+	SetShaderVariables(_pv);
+	BindAttributes();
+	
+	glDrawArrays(GL_TRIANGLES, 0, m_vertexData.size());
+	glDisableVertexAttribArray(m_shader->GetAttrNormals());
+	glDisableVertexAttribArray(m_shader->GetAttrVertices());
+	glDisableVertexAttribArray(m_shader->GetAttrTexCoords());
+}
+
+void Mesh::BindAttributes() {
 	// 1st attribute buffer : vertices
 	glEnableVertexAttribArray(m_shader->GetAttrVertices()); // vertext position data will be used in the rendering process
-	glVertexAttribPointer(m_shader->GetAttrVertices(), 
+	glVertexAttribPointer(m_shader->GetAttrVertices(),
 		3,                 // size 
 		GL_FLOAT,          // type 
 		GL_FALSE,          // normalized 
@@ -113,12 +129,6 @@ void Mesh::Render(glm::mat4 _wvp) {
 		8 * sizeof(float), // stride (8 floats per vertex definition)
 		(void*)(6 * sizeof(float))); // array buffer offset
 
-	// 4th attribute : WVP
-	m_rotation.y += 0.0001f;
-	glm::mat4 translate = glm::translate(_wvp, m_position);
-	glm::mat4 transform = glm::rotate(translate, m_rotation.y, glm::vec3(0, 1, 0));
-	glUniformMatrix4fv(m_shader->GetAttrWVP(), 1, GL_FALSE, &transform[0][0]);
-
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer); // bind the vertex buffer
 
 	glActiveTexture(GL_TEXTURE0);
@@ -127,9 +137,20 @@ void Mesh::Render(glm::mat4 _wvp) {
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, m_texture2.GetTexture()); // bind emoji texture explicitly to texture unit 2
 	glUniform1i(m_shader->GetSampler2(), 1);
-	
-	glDrawArrays(GL_TRIANGLES, 0, m_vertexData.size());
-	glDisableVertexAttribArray(m_shader->GetAttrNormals());
-	glDisableVertexAttribArray(m_shader->GetAttrVertices());
-	glDisableVertexAttribArray(m_shader->GetAttrTexCoords());
+}
+
+void Mesh::CalculateTransform() {
+	m_world = glm::translate(glm::mat4(1.0f), m_position);
+	m_world = glm::rotate(m_world, m_rotation.y, glm::vec3(0, 1, 0));
+	m_world = glm::scale(m_world, m_scale);
+	//glUniformMatrix4fv(m_shader->GetAttrWVP(), 1, GL_FALSE, &transform[0][0]);
+}
+
+void Mesh::SetShaderVariables(glm::mat4 _pv) {
+	m_shader->SetMat4("World", m_world);
+	m_shader->SetVec3("AmbientLight", { 0.1f, 0.1, 0.1f });
+	m_shader->SetVec3("DiffuseColor", { 1.0f, 1.0f, 1.0f }); 
+	m_shader->SetVec3("LightPosition", m_lightPosition);
+	m_shader->SetVec3("LightColor", m_lightColor);
+	m_shader->SetMat4("WVP", _pv * m_world);
 }
