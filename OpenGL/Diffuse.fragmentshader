@@ -21,6 +21,6 @@ void main() {
 	vec3 lambertian = dot(retNormal, lightDir) * LightColor; // Add lambertian lighting
 	vec3 refl = reflect(-lightDir, retNormal);
 	vec3 specular = pow(max(dot(refl, retViewDirection), 0.0f), SpecularStrength) * SpecularColor;
-	vec3 color = (lambertian + AmbientLight, 0.0f, 1.0f) * DiffuseColor;
+	vec3 color = (lambertian + specular + AmbientLight) * DiffuseColor;
 	FragColor = vec4(color, 1.0f) * texture(sampler1, retTexCoord); // calculate final color 
 }
