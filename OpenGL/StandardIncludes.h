@@ -10,6 +10,7 @@
 #include <GLFW/glfw3.h> // Inlcude GLFW
 #include <glm/glm.hpp> // Include GLM
 #include <glm/gtc/matrix_transform.hpp> // View / projection
+#include <glm/gtc/random.hpp>
 
 #include "Resolution.h"
 #include "Singleton.h"
