@@ -33,17 +33,25 @@ void GameController::RunGame() {
 	m_shaderDiffuse.LoadShaders("Diffuse.vertexshader", "Diffuse.fragmentshader");
 
 	// create meshes
-	m_meshLight = Mesh();
-	m_meshLight.Create(&m_shaderColor);
-	m_meshLight.SetPosition({ 0.5f, 0.0f, -0.5f });
-	m_meshLight.SetScale({ 0.1f, 0.1f, 0.1f });
+	for (int count = 0; count < 4; count++) {
+		Mesh m = Mesh();
+		m.Create(&m_shaderColor);
+		m.SetPosition({ 0.5f + (float)count / 10.0f, 0.0f, -0.5f });
+		m.SetColor({ glm::linearRand(0.0f, 1.0f), glm::linearRand(0.0f, 1.0f), glm::linearRand(0.0f, 1.0f) });
+		m.SetScale({ 0.1f, 0.1f, 0.1f });
+		Mesh::Lights.push_back(m);
+	}
+	//m_meshLight = Mesh();
+	//m_meshLight.Create(&m_shaderColor);
+	//m_meshLight.SetPosition({ 0.5f, 0.0f, -0.5f });
+	//m_meshLight.SetScale({ 0.1f, 0.1f, 0.1f });
 
 	for (int col = 0; col < 10; col++) {
 		for (int count = 0; count < 10; count++) {
 			Mesh box = Mesh();
 			box.Create(&m_shaderDiffuse);
-			box.SetLightColor({ 1.0f, 1.0f, 1.0f });
-			box.SetLightPosition(m_meshLight.GetPosition());
+			//box.SetLightColor({ 1.0f, 1.0f, 1.0f });
+			//box.SetLightPosition(m_meshLight.GetPosition());
 			box.SetCameraPosition(m_camera.GetPosition());
 			box.SetScale({ 0.1f, 0.1f, 0.1f });
 			box.SetPosition({ 0.0, -0.5f + (float)count / 10.0f, -0.2f + (float)col / 10.0f });
@@ -60,12 +68,18 @@ void GameController::RunGame() {
 		for (unsigned int count = 0; count < m_meshBoxes.size(); count++) {
 			m_meshBoxes[count].Render(m_camera.GetProjection() * m_camera.GetView());
 		}
-		m_meshLight.Render(m_camera.GetProjection() * m_camera.GetView());
+		for (int count = 0; count < 4; count++) {
+			Mesh::Lights[count].Render(m_camera.GetProjection() * m_camera.GetView());
+		}
+		//m_meshLight.Render(m_camera.GetProjection() * m_camera.GetView());
 		glfwSwapBuffers(win); // swap back and front buffers
 		glfwPollEvents();
 	} while (glfwGetKey(win, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(win) == 0);
 
-	m_meshLight.Cleanup();
+	//m_meshLight.Cleanup();
+	for (int count = 0; count < 4; count++) {
+		Mesh::Lights[count].Cleanup();
+	}
 	for (unsigned int count = 0; count < m_meshBoxes.size(); count++) {
 		m_meshBoxes[count].Cleanup();
 	}
