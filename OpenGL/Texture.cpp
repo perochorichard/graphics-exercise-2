@@ -2,7 +2,11 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
-
+/*
+* ASSIGNMENT 2
+* RICHARD PEROCHO
+* STUDENT ID: 991454906
+*/
 Texture::Texture() {
 	m_width = 0;
 	m_height = 0;
@@ -15,6 +19,18 @@ void Texture::Cleanup() {
 }
 
 void Texture::LoadTexture(string _fileName) {
+    // process filename
+    if (_fileName.empty()) {
+        std::cout << "[TEXTURE] filename empty" << std::endl;
+        return;
+    }
+    const size_t last_slash_idx = _fileName.find_last_of("\\");
+    if (std::string::npos != last_slash_idx)
+    {
+        _fileName.erase(0, last_slash_idx + 1);
+    }
+    _fileName = "../Assets/Textures/" + _fileName;
+
     glGenTextures(1, &m_texture);
     glBindTexture(GL_TEXTURE_2D, m_texture);
 
@@ -32,10 +48,10 @@ void Texture::LoadTexture(string _fileName) {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
         stbi_image_free(data);
-        std::cout << "texture loaded..." << std::endl;
+        std::cout << "[TEXTURE] successfully loaded " << _fileName << std::endl;
     }
     else {
         // Handle the error - log the error message or throw an exception
-        std::cerr << "Failed to load texture: " << _fileName << std::endl;
+        std::cerr << "[TEXTURE] failed to load " << _fileName << std::endl;
     }
 }

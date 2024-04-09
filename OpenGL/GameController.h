@@ -21,8 +21,9 @@ private:
 	Shader m_shaderDiffuse;
 	Shader m_shaderFont;
 	Camera m_camera;
+	Mesh m_teapot;
+	Mesh m_texturedSphere;
 	vector<Mesh> m_meshBoxes;
-	Mesh m_meshLight;
 };
 
 #endif // !GAME_CONTROLLER_H

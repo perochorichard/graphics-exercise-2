@@ -25,20 +25,48 @@ uniform Material material;
 #define NR_LIGHTS 1
 uniform Light light[NR_LIGHTS];
 
+uniform bool moveLightValue;
+uniform bool colorByPositionValue;
+uniform bool moveCubesToSphereValue;
+uniform int specularStrengthValue;
+uniform int specularColorRValue;
+uniform int specularColorGValue;
+uniform int specularColorBValue;
+
 void main() {
 	vec4 finalColor = vec4(0);
 	for (int i = 0; i < NR_LIGHTS; i++) {
-		vec3 lightDir = normalize(light[i].position - retFragPos);			//Normalized for correct dot product results
-		float lambertianStrength = dot(lightDir, retNormal);			//Add lambertian lighting	
-		vec3 refl = reflect(-lightDir, retNormal);
+		if (moveLightValue) {
+			vec3 lightDir = normalize(light[i].position - retFragPos); //Normalized for correct dot product results
+			float lambertianStrength = dot(lightDir, retNormal); //Add lambertian lighting	
+			vec3 refl = reflect(-lightDir, retNormal);
+			float specularStrength = pow(max(dot(retViewDirection, refl), 0.0f), material.specularStrength);
+			vec3 ambient = texture(material.diffuseTexture, retTexCoord).rgb * light[i].ambientColor;
+			vec3 lambertian = lambertianStrength * texture(material.diffuseTexture, retTexCoord).rgb * light[i].diffuseColor;
+			vec3 specularColor = vec3(specularColorRValue / 100.0, specularColorGValue / 100.0, specularColorBValue / 100.0);
+			vec3 specular = specularStrength * texture(material.specularTexture, retTexCoord).rgb * specularColor * specularStrengthValue;
 
-		float specularStrength = pow(max(dot(retViewDirection, refl), 0.0f), material.specularStrength);
+			finalColor += vec4(ambient + lambertian + specular, 1.0f);
+		} 
 		
-		vec3 ambient = texture(material.diffuseTexture, retTexCoord).rgb * light[i].ambientColor / NR_LIGHTS;
-		vec3 lambertian = lambertianStrength * texture(material.diffuseTexture, retTexCoord).rgb * light[i].diffuseColor;
-		vec3 specular = specularStrength * texture(material.specularTexture, retTexCoord).rgb * light[i].specularColor;
+		else if (colorByPositionValue) {
+			vec3 ambient = texture(material.diffuseTexture, retTexCoord).rgb;
+			vec3 positionBasedColor = vec3(abs(retFragPos.x), abs(retFragPos.y), abs(retFragPos.z));
+			finalColor = vec4(ambient.rgb * positionBasedColor, 1.0f);
+		} 
+		
+		else if (moveCubesToSphereValue) {
+			// todo: move cubes to sphere light
+			vec3 lightDir = normalize(light[i].position - retFragPos); //Normalized for correct dot product results
+			float lambertianStrength = dot(lightDir, retNormal); //Add lambertian lighting	
+			vec3 refl = reflect(-lightDir, retNormal);
+			float specularStrength = pow(max(dot(retViewDirection, refl), 0.0f), material.specularStrength);
+			vec3 ambient = texture(material.diffuseTexture, retTexCoord).rgb * light[i].ambientColor;
+			vec3 lambertian = lambertianStrength * texture(material.diffuseTexture, retTexCoord).rgb * light[i].diffuseColor;
+			vec3 specular = specularStrength * texture(material.specularTexture, retTexCoord).rgb * light[0].specularColor;
 
-		finalColor += vec4(ambient + lambertian + specular, 1.0f);
+			finalColor += vec4(ambient + lambertian + specular, 1.0f);
+		}
 	}
 
 	FragColor = finalColor;

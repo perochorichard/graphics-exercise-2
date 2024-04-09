@@ -1,5 +1,9 @@
 #include "Camera.h"
-
+/*
+* ASSIGNMENT 2
+* RICHARD PEROCHO
+* STUDENT ID: 991454906
+*/
 Camera::Camera() {
 	m_projection = { };
 	m_view = { };
@@ -7,7 +11,7 @@ Camera::Camera() {
 }
 
 Camera::Camera(Resolution _screenResolution) {
-	m_position = { 1, 1,1  };
+	m_position = { 0, 2, 2 };
 	// projection matrix (45 deg FoV, 4:3 aspect ratio, display range: 0.1 unit <-> 100 units
 	m_projection = glm::perspective(glm::radians(45.0f),
 		(float)_screenResolution.m_width /

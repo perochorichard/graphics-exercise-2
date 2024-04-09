@@ -37,8 +37,8 @@ private:
 	string Concat(string _s1, int _index, string _s2);
 
 	Shader* m_shader;
-	Texture m_texture;
-	Texture m_texture2;
+	Texture m_textureDiffuse;
+	Texture m_textureSpecular;
 
 	GLuint m_vertexBuffer;
 	//GLuint m_indexBuffer;

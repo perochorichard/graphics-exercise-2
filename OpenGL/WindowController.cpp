@@ -1,5 +1,9 @@
 #include "WindowController.h"
-
+/*
+* ASSIGNMENT 2
+* RICHARD PEROCHO
+* STUDENT ID: 991454906
+*/
 WindowController::WindowController() {
 	m_window = nullptr;
 }
@@ -18,7 +22,8 @@ void WindowController::NewWindow() {
 	glfwWindowHint(GLFW_SAMPLES, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // 3 in 3.1
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1); // 1 in 3.1
-	M_ASSERT((m_window = glfwCreateWindow(1024, 576, "A sample scene", NULL, NULL)) != nullptr, "Failed to open GLFW window.");
+	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+	M_ASSERT((m_window = glfwCreateWindow(mode->width, mode->height, "Assignment 2", NULL, NULL)) != nullptr, "Failed to open GLFW window.");
 	glfwMakeContextCurrent(m_window);
 }
 

@@ -1,7 +1,11 @@
 #include "Fonts.h"
 #include "Shader.h"
 #include "WindowController.h"
-
+/*
+* ASSIGNMENT 2
+* RICHARD PEROCHO
+* STUDENT ID: 991454906
+*/
 Fonts::Fonts()
 {
 	m_shader = nullptr;

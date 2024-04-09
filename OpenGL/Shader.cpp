@@ -1,6 +1,10 @@
 #include "Shader.h"
 
-
+/*
+* ASSIGNMENT 2
+* RICHARD PEROCHO
+* STUDENT ID: 991454906
+*/
 // Constructor
 Shader::Shader()
 {

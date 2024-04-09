@@ -3,12 +3,16 @@
 #include "OBJ_Loader.h"		//Include object loader
 
 vector<Mesh> Mesh::Lights;
-
+/*
+* ASSIGNMENT 2
+* RICHARD PEROCHO
+* STUDENT ID: 991454906
+*/
 Mesh::Mesh()
 {
 	m_shader = nullptr;
-	m_texture = {};
-	m_texture2 = {};
+	m_textureDiffuse = {};
+	m_textureSpecular = {};
 	m_vertexBuffer = 0;
 	m_position = { 0, 0, 0 };
 	m_rotation = { 0, 0, 0 };
@@ -23,8 +27,8 @@ Mesh::~Mesh()
 void Mesh::Cleanup()
 {
 	glDeleteBuffers(1, &m_vertexBuffer);
-	m_texture.Cleanup();
-	m_texture2.Cleanup();
+	m_textureDiffuse.Cleanup();
+	m_textureSpecular.Cleanup();
 }
 
 string Mesh::Concat(string _s1, int _index, string _s2)
@@ -57,19 +61,15 @@ void Mesh::Create(Shader* _shader, string _file)
 	}
 
 
-	//Remove directory if present
-	string diffuseNap = Loader.LoadedMaterials[0].map_Kd;
-	const size_t last_slash_idx = diffuseNap.find_last_of("\\");
-	if (std::string::npos != last_slash_idx)
-	{
-		diffuseNap.erase(0, last_slash_idx + 1);
-	}
+	// load diffuse texture from mtl file (if exists)
+	string diffuseMapPath = Loader.LoadedMaterials[0].map_Kd;
+	m_textureDiffuse = Texture();
+	m_textureDiffuse.LoadTexture(diffuseMapPath);
 
-
-	m_texture = Texture();
-	m_texture.LoadTexture("../Assets/Textures/" + diffuseNap);
-	m_texture2 = Texture();
-	m_texture2.LoadTexture("../Assets/Textures/" + diffuseNap);
+	// load specular texture from mtl file (if exists)
+	string specularMapPath = Loader.LoadedMaterials[0].map_Ks;
+	m_textureSpecular = Texture();
+	m_textureSpecular.LoadTexture(specularMapPath);
 
 	glGenBuffers(1, &m_vertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
@@ -112,18 +112,18 @@ void Mesh::BindAttributes()
 
 	//bind texture
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, m_texture.GetTexture());
+	glBindTexture(GL_TEXTURE_2D, m_textureDiffuse.GetTexture());
 	glUniform1i(m_shader->GetSampler1(), 0);
 
 	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, m_texture2.GetTexture());
+	glBindTexture(GL_TEXTURE_2D, m_textureSpecular.GetTexture());
 	glUniform1i(m_shader->GetSampler2(), 1);
 }
 
 void Mesh::CalculateTransform()
 {
 	m_world = glm::translate(glm::mat4(1.0f), m_position);
-	m_world = glm::rotate(m_world, m_rotation.y, glm::vec3(0, 1, 0));
+	m_world = glm::rotate(m_world, m_rotation.x, glm::vec3(1, 0, 0));
 	m_world = glm::scale(m_world, m_scale);
 }
 
@@ -153,8 +153,8 @@ void Mesh::SetShaderVariables(glm::mat4 _pv)
 
 	//material
 	m_shader->SetFloat("material.specularStrength", 8);
-	m_shader->SetTextureSampler("material.diffuseTexture", GL_TEXTURE0, 0, m_texture.GetTexture());
-	m_shader->SetTextureSampler("material.specularTexture", GL_TEXTURE1, 1, m_texture2.GetTexture());
+	m_shader->SetTextureSampler("material.diffuseTexture", GL_TEXTURE0, 0, m_textureDiffuse.GetTexture());
+	m_shader->SetTextureSampler("material.specularTexture", GL_TEXTURE1, 1, m_textureSpecular.GetTexture());
 }
 
 //void Mesh::Render(glm::mat4 _wvp)
@@ -162,7 +162,7 @@ void Mesh::Render(glm::mat4 _pv)
 {
 	glUseProgram(m_shader->GetProgramID()); // Use shader
 
-	m_rotation.y += 0.003f;
+	m_rotation.x += 0.003f;
 	CalculateTransform();
 	SetShaderVariables(_pv);
 	BindAttributes();
